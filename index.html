@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaPay - Mobile Wallet</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #eef2f8;
+    color: #172554;
+}
+
+header {
+    background: #10234b;
+    color: white;
+    padding: 24px 20px 35px;
+    border-radius: 0 0 28px 28px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: bold;
+}
+
+.greeting {
+    margin-top: 28px;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.balance {
+    font-size: 34px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.balance-label {
+    margin-top: 8px;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.actions button {
+    flex: 1;
+    background: #3b82f6;
+    color: white;
+}
+
+.actions button:last-child {
+    background: white;
+    color: #1d4ed8;
+}
+
+main {
+    max-width: 600px;
+    margin: auto;
+    padding: 22px 18px 100px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0 16px;
+}
+
+.section-heading h2 {
+    font-size: 19px;
+}
+
+.section-heading a {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 24px;
+    box-shadow: 0 5px 20px #0f172a08;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.quick {
+    text-align: center;
+    font-size: 12px;
+    color: #475569;
+}
+
+.quick-icon {
+    width: 48px;
+    height: 48px;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    margin: 0 auto 9px;
+}
+
+.transaction {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.transaction:last-child {
+    border-bottom: none;
+}
+
+.tx-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: #f1f5f9;
+    font-size: 20px;
+}
+
+.tx-info {
+    flex: 1;
+}
+
+.tx-info h3 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.tx-info p {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.amount {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.positive {
+    color: #16a34a;
+}
+
+.negative {
+    color: #172554;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+label {
+    display: block;
+    margin: 16px 0 8px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #dbe3ef;
+    border-radius: 12px;
+    font-size: 15px;
+    background: white;
+    outline-color: #3b82f6;
+}
+
+.primary-btn {
+    width: 100%;
+    margin-top: 22px;
+    background: #2563eb;
+    color: white;
+}
+
+.amount-input {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 13px 5px;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+}
+
+.bottom-nav button {
+    background: transparent;
+    color: #64748b;
+    font-size: 11px;
+    padding: 5px;
+}
+
+.bottom-nav button.selected {
+    color: #2563eb;
+}
+
+.notice {
+    font-size: 13px;
+    color: #64748b;
+    text-align: center;
+    margin-top: 14px;
+    line-height: 1.5;
+}
+
+@media (min-width: 700px) {
+    body {
+        padding-bottom: 30px;
+    }
+    header {
+        max-width: 600px;
+        margin: 20px auto 0;
+        border-radius: 24px;
+    }
+    .bottom-nav {
+        max-width: 600px;
+        margin: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 18px 18px 0 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="top">
+        <div class="logo">✦ NovaPay</div>
+        <div class="avatar">P</div>
+    </div>
+
+    <p class="greeting">Good afternoon, Preethiyanga 👋</p>
+    <p class="balance-label">Total Available Balance</p>
+    <div class="balance" id="balance">$2,450.80</div>
+
+    <div class="actions">
+        <button onclick="showPage('add')">＋ Add Money</button>
+        <button onclick="showPage('send')">↗ Send Money</button>
+    </div>
+</header>
+
+<main>
+
+<section class="page active" id="home">
+    <div class="section-heading">
+        <h2>Quick Actions</h2>
+    </div>
+
+    <div class="card">
+        <div class="quick-actions">
+            <div class="quick" onclick="showPage('add')">
+                <div class="quick-icon">＋</div>Add Money
+            </div>
+            <div class="quick" onclick="showPage('send')">
+                <div class="quick-icon">↗</div>Transfer
+            </div>
+            <div class="quick" onclick="showPage('history')">
+                <div class="quick-icon">▤</div>History
+            </div>
+            <div class="quick" onclick="alert('Your NovaPay profile is active.')">
+                <div class="quick-icon">♙</div>Profile
+            </div>
+        </div>
+    </div>
+
+    <div class="section-heading">
+        <h2>Recent Transactions</h2>
+        <a href="#" onclick="showPage('history');return false;">View all</a>
+    </div>
+
+    <div class="card" id="recentList">
+        <div class="transaction">
+            <div class="tx-icon">☕</div>
+            <div class="tx-info">
+                <h3>Starbucks Coffee</h3>
+                <p>Today · 10:42 AM</p>
+            </div>
+            <div class="amount negative">−$8.50</div>
+        </div>
+
+        <div class="transaction">
+            <div class="tx-icon">🛍️</div>
+            <div class="tx-info">
+                <h3>Shopping Mall</h3>
+                <p>Yesterday · 4:20 PM</p>
+            </div>
+            <div class="amount negative">−$64.00</div>
+        </div>
+
+        <div class="transaction">
+            <div class="tx-icon">💼</div>
+            <div class="tx-info">
+                <h3>Monthly Salary</h3>
+                <p>Oct 20 · 9:00 AM</p>
+            </div>
+            <div class="amount positive">+$1,850.00</div>
+        </div>
+    </div>
+
+    <div class="notice">Your money, your control. 🔒<br>Demo wallet · No real payments are processed.</div>
+</section>
+
+<section class="page" id="send">
+    <div class="section-heading">
+        <h2>Send Money</h2>
+        <a href="#" onclick="showPage('home');return false;">Cancel</a>
+    </div>
+
+    <div class="card">
+        <label for="receiver">Recipient Name</label>
+        <input id="receiver" type="text" placeholder="Enter recipient name">
+
+        <label for="account">Account / Email</label>
+        <input id="account" type="text" placeholder="name@example.com">
+
+        <label for="sendAmount">Amount (USD)</label>
+        <input class="amount-input" id="sendAmount" type="number" min="0.01" step="0.01" placeholder="$0.00">
+
+        <label for="note">Add a Note (Optional)</label>
+        <input id="note" type="text" placeholder="What's it for?">
+
+        <button class="primary-btn" onclick="sendMoney()">Confirm Transfer</button>
+        <p class="notice">Demo only. No actual money will be transferred.</p>
+    </div>
+</section>
+
+<section class="page" id="add">
+    <div class="section-heading">
+        <h2>Add Money</h2>
+        <a href="#" onclick="showPage('home');return false;">Cancel</a>
+    </div>
+
+    <div class="card">
+        <label for="addAmount">Amount (USD)</label>
+        <input class="amount-input" id="addAmount" type="number" min="0.01" step="0.01" placeholder="$0.00">
+
+        <label for="method">Payment Method</label>
+        <select id="method">
+            <option>Bank Account</option>
+            <option>Debit Card</option>
+            <option>Credit Card</option>
+        </select>
+
+        <button class="primary-btn" onclick="addMoney()">Add to Wallet</button>
+        <p class="notice">Demo only. No actual payment method is connected.</p>
+    </div>
+</section>
+
+<section class="page" id="history">
+    <div class="section-heading">
+        <h2>Transaction History</h2>
+    </div>
+
+    <div class="card">
+        <label for="search">Search Transactions</label>
+        <input id="search" type="search" placeholder="Search by name..." oninput="filterTransactions()">
+
+        <label for="filter">Transaction Type</label>
+        <select id="filter" onchange="filterTransactions()">
+            <option value="all">All Transactions</option>
+            <option value="sent">Money Sent</option>
+            <option value="received">Money Received</option>
+        </select>
+
+        <div id="historyList"></div>
+    </div>
+</section>
+
+</main>
+
+<nav class="bottom-nav">
+    <button class="selected" id="nav-home" onclick="showPage('home')">⌂<br>Home</button>
+    <button id="nav-send" onclick="showPage('send')">↗<br>Transfer</button>
+    <button id="nav-history" onclick="showPage('history')">▤<br>History</button>
+    <button id="nav-add" onclick="showPage('add')">＋<br>Add Money</button>
+</nav>
+
+<script>
+let walletBalance = 2450.80;
+
+let transactions = [
+    {name:"Starbucks Coffee", date:"Today · 10:42 AM", amount:-8.50, type:"sent", icon:"☕"},
+    {name:"Shopping Mall", date:"Yesterday · 4:20 PM", amount:-64.00, type:"sent", icon:"🛍️"},
+    {name:"Monthly Salary", date:"Oct 20 · 9:00 AM", amount:1850.00, type:"received", icon:"💼"}
+];
+
+function money(value) {
+    return "$" + Math.abs(value).toLocaleString("en-US", {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+    });
+}
+
+function updateBalance() {
+    document.getElementById("balance").textContent =
+        money(walletBalance);
+}
+
+function showPage(page) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(page).classList.add("active");
+
+    document.querySelectorAll(".bottom-nav button").forEach(b => b.classList.remove("selected"));
+    const nav = document.getElementById("nav-" + page);
+    if (nav) nav.classList.add("selected");
+
+    if (page === "history") renderHistory();
+    window.scrollTo(0, 0);
+}
+
+function sendMoney() {
+    const receiver = document.getElementById("receiver").value.trim();
+    const account = document.getElementById("account").value.trim();
+    const amount = Number(document.getElementById("sendAmount").value);
+    const note = document.getElementById("note").value.trim();
+
+    if (!receiver || !account || !Number.isFinite(amount) || amount <= 0) {
+        alert("Please enter the recipient, account details, and a valid amount.");
+        return;
+    }
+
+    if (amount > walletBalance) {
+        alert("Insufficient demo wallet balance.");
+        return;
+    }
+
+    walletBalance -= amount;
+    transactions.unshift({
+        name:receiver + (note ? " · " + note : ""),
+        date:"Just now",
+        amount:-amount,
+        type:"sent",
+        icon:"↗"
+    });
+
+    updateBalance();
+    renderRecent();
+    renderHistory();
+    document.getElementById("receiver").value = "";
+    document.getElementById("account").value = "";
+    document.getElementById("sendAmount").value = "";
+    document.getElementById("note").value = "";
+
+    alert("Demo transfer successful!");
+    showPage("history");
+}
+
+function addMoney() {
+    const amount = Number(document.getElementById("addAmount").value);
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+    }
+
+    walletBalance += amount;
+    transactions.unshift({
+        name:"Wallet Top Up",
+        date:"Just now",
+        amount:amount,
+        type:"received",
+        icon:"＋"
+    });
+
+    updateBalance();
+    renderRecent();
+    renderHistory();
+    document.getElementById("addAmount").value = "";
+
+    alert("Demo balance updated successfully!");
+    showPage("home");
+}
+
+function createTransactionElement(tx) {
+    const row = document.createElement("div");
+    row.className = "transaction";
+
+    const icon = document.createElement("div");
+    icon.className = "tx-icon";
+    icon.textContent = tx.icon;
+
+    const info = document.createElement("div");
+    info.className = "tx-info";
+
+    const title = document.createElement("h3");
+    title.textContent = tx.name;
+
+    const date = document.createElement("p");
+    date.textContent = tx.date;
+
+    info.append(title, date);
+
+    const amount = document.createElement("div");
+    amount.className = "amount " + (tx.amount >= 0 ? "positive" : "negative");
+    amount.textContent = (tx.amount >= 0 ? "+" : "−") + money(tx.amount);
+
+    row.append(icon, info, amount);
+    return row;
+}
+
+function renderRecent() {
+    const list = document.getElementById("recentList");
+    list.replaceChildren();
+
+    transactions.slice(0, 5).forEach(tx => {
+        list.appendChild(createTransactionElement(tx));
+    });
+}
+
+function renderHistory() {
+    const list = document.getElementById("historyList");
+    if (!list) return;
+
+    list.replaceChildren();
+
+    const query = document.getElementById("search").value.toLowerCase();
+    const type = document.getElementById("filter").value;
+
+    const filtered = transactions.filter(tx =>
+        tx.name.toLowerCase().includes(query) &&
+        (type === "all" || tx.type === type)
+    );
+
+    if (filtered.length === 0) {
+        const message = document.createElement("p");
+        message.className = "notice";
+        message.textContent = "No matching transactions found.";
+        list.appendChild(message);
+        return;
+    }
+
+    filtered.forEach(tx => list.appendChild(createTransactionElement(tx)));
+}
+
+function filterTransactions() {
+    renderHistory();
+}
+
+renderRecent();
+renderHistory();
+updateBalance();
+</script>
+
+</body>
+</html>
